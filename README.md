@@ -11,6 +11,9 @@ ETL-Polars/
 └── requirements.txt
 └── pkg                 # Contains all nedded files
     └── __init__.py     # Specifies that folder 'pkg' is a Python package
+    └── extract.py      # Contains all functions related to extraction process
+    └── transform.py    # Contains all functions related to transform process
+    └── globals.py      # Contains all global variables
     └── config.py       # Contains all configuration params
 ```
 
