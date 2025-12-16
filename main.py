@@ -1,6 +1,6 @@
 
 
-from pkg.functions import *
+from pkg.extract import *
 
 
 def main():
@@ -9,18 +9,19 @@ def main():
 
     for table_name in TABLES_TO_PROCESS:
 
-        print("\n" + "=" * 15)
+        print("\n" + "=" * 25)
         print(f"| 📊 Procesando Tabla: {table_name}")
-        print("=" * 15)
+        print("=" * 25)
 
         try:
             # 1. Extracción (E)
             df = extract_from_file(table_name, ROOT_DATA_PATH, ANOMALIES_DIR)
-
+            df_sample = df.sample(50000)
+            df_sample.write_excel(f'{table_name}_sample.xlsx')
             # 2. Transformación (T)
-            print(f"--- INICIANDO TRANSFORMACIÓN para {table_name} ---")
+            # print(f"--- INICIANDO TRANSFORMACIÓN para {table_name} ---")
             # df = apply_transformation(table_name, df)
-            print("--- TRANSFORMACIÓN FINALIZADA ---")
+            # print("--- TRANSFORMACIÓN FINALIZADA ---")
 
             # 3. Carga (L) - L1 (Parquet) y L2 (SQL Server)
             # apply_loading(table_name, df)

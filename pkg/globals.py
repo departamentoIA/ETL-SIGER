@@ -29,30 +29,27 @@ TABLES_TO_PROCESS: List[str] = [
 # Tablas que requieren manejo manual
 TABLES_MANUAL_CLEANUP = ['MVCARATULAS', 'CTSOCIOS', 'DTFIRMAS']
 
-# Columnas excluidas
+# Columnas excluidas por tabla
 COLUMNS_TO_EXCLUDE = {
     'MVCARATULAS': ['DSOBJETO', 'DSDIRECCION'],
     'DTFIRMAS': ['DSCADORIGINAL', 'DSFIRMA'],
     'CTSOCIOS': [],
 }
 
-
 # Tablas que requieren manejo manual del encabezado
 TABLES_REQUIRING_MANUAL_HEADER = [
     'MVSOLICITUDES', 'MVCARATULAS', 'CTSOCIOS', 'MVFRMACTO',
-    'DTFIRMAS', 'MVDOCADJUNTOS', 'PAGO_PORTAL', 'CTUSUARIOS'
+    # 'DTFIRMAS', 'MVDOCADJUNTOS', 'PAGO_PORTAL', 'CTUSUARIOS'
 ]
 
-# Definición de tipos de datos forzados
+# Definición de tipos de datos forzados por tabla
 SCHEMA_OVERRIDES: Dict[str, Dict[str, pl.DataType]] = {
     'MVSOLICITUDES': {'DSNCI': pl.Utf8},
     'PAGO_PORTAL': {'NOCONFIRMACIONRS': pl.Utf8, 'NOREFERENCIARS': pl.Utf8},
     'MVVARACTO': {'NOVALOR': pl.Float64},
 
     'CTSOCIOS': {
-        'NOVALOR': pl.Float64,
-        'LLRFC': pl.Utf8,
-        'NOTOTAL': pl.Float64,
+        'NOVALOR': pl.Float64, 'LLRFC': pl.Utf8, 'NOTOTAL': pl.Float64,
     },
 
     # MVCARATULAS: Forzado de tipos para las columnas restantes
@@ -70,7 +67,14 @@ SCHEMA_OVERRIDES: Dict[str, Dict[str, pl.DataType]] = {
     }
 }
 
+# Aumentar el límite del campo CSV para manejar CLOBs grandes (10 MB).
+MAX_FIELD_SIZE = 10 * 1024 * 1024
+try:
+    csv.field_size_limit(MAX_FIELD_SIZE)
+except OverflowError:
+    csv.field_size_limit(sys.maxsize)
 
+# Configurationes extras ----------------------------------------------
 current_dir = Path(__file__).resolve().parent
 sys.path.append(current_dir.as_posix())
 
@@ -84,10 +88,3 @@ REPORTS_DIR.mkdir(parents=True, exist_ok=True)
 ANOMALIES_DIR.mkdir(parents=True, exist_ok=True)
 (BASE_DIR / 'data' / 'clean_data').mkdir(parents=True,
                                          exist_ok=True)  # Asegurar carpeta de Parquet
-
-# Aumentar el límite del campo CSV para manejar CLOBs grandes (10 MB).
-MAX_FIELD_SIZE = 10 * 1024 * 1024
-try:
-    csv.field_size_limit(MAX_FIELD_SIZE)
-except OverflowError:
-    csv.field_size_limit(sys.maxsize)

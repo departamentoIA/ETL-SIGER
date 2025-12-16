@@ -1,4 +1,4 @@
-# functions.py
+# extract.py
 """This file calls 'globals.py'."""
 from pkg.globals import *
 
@@ -14,7 +14,7 @@ def get_file_paths(table_name: str, root_path: Path) -> Optional[Path]:
     return None
 
 
-def sample_problematic_lines(file_path: Path, n_lines=10):
+def sample_problematic_lines(file_path: Path, n_lines=10) -> None:
     """Muestra las primeras N líneas del archivo para inspección manual en caso de fallo."""
     print(
         f"\n--- MUESTRA DE LAS PRIMERAS {n_lines} LÍNEAS PARA INSPECCIÓN ({file_path.name}) ---")
@@ -34,15 +34,11 @@ def sample_problematic_lines(file_path: Path, n_lines=10):
 
 def extract_from_file(table_name: str, root_path: Path, limit: Optional[int] = None) -> pl.DataFrame:
     """Función principal para dirigir la extracción robusta."""
-    print(f"--- INICIANDO EXTRACCIÓN (E) para {table_name} ---")
-
+    print(f"--- INICIANDO EXTRACCIÓN para {table_name} ---")
     file_path = get_file_paths(table_name, root_path)
     if not file_path:
         raise FileNotFoundError(
             f"No se encontró el archivo para '{table_name}'.")
-
-    print(f"  -> Archivo encontrado: {file_path.name}")
-
     # --- 1. Determinación de Columnas a Leer
     columns_to_read: Optional[List[str]] = None
     columns_to_exclude = set(COLUMNS_TO_EXCLUDE.get(table_name, []))
@@ -54,7 +50,6 @@ def extract_from_file(table_name: str, root_path: Path, limit: Optional[int] = N
     if table_name == 'MVCARATULAS':
         delimiter = '|'
     # =======================================
-
     if table_name in TABLES_REQUIRING_MANUAL_HEADER:
         try:
             with open(file_path, 'rb') as f_bin:
@@ -75,7 +70,7 @@ def extract_from_file(table_name: str, root_path: Path, limit: Optional[int] = N
         columns_to_read = [
             col for col in all_columns if col not in columns_to_exclude]
 
-        if columns_to_exclude and table_name not in TABLES_MANUAL_CLEANUP:
+        if columns_to_exclude and (table_name not in TABLES_MANUAL_CLEANUP):
             print(f"Excluyendo campos problemáticos: {columns_to_exclude}")
 
     # --- 2. Desvío para Limpieza Manual
@@ -83,7 +78,6 @@ def extract_from_file(table_name: str, root_path: Path, limit: Optional[int] = N
         return extract_with_manual_clean(table_name, file_path, limit, all_columns)
 
     # --- 3. Lectura Estándar de Polars para el resto de tablas ---
-
     print(f"Extrayendo datos de: {file_path.as_posix()}")
 
     read_params: Dict[str, Any] = {
@@ -118,11 +112,12 @@ def extract_from_file(table_name: str, root_path: Path, limit: Optional[int] = N
     print(f"Datos extraídos: {df.shape[0]} filas, {df.shape[1]} columnas.")
     return df
 
+# extract_with_manual_clean --------------------------------------------
+
 
 def extract_with_manual_clean(table_name: str, file_path: Path, n_rows_limit: Optional[int] = None, all_columns: list = None) -> pl.DataFrame:
-
+    '''Limpieza manual'''
     print(f"--- INICIANDO LIMPIEZA MANUAL Y EXTRACCIÓN para {table_name} ---")
-
     clean_lines = []
     anomaly_log = []
     columns_to_exclude = set(COLUMNS_TO_EXCLUDE.get(table_name, []))
@@ -158,7 +153,6 @@ def extract_with_manual_clean(table_name: str, file_path: Path, n_rows_limit: Op
 
             # 2. Iterar sobre las filas y aplicar limpieza
             for i, row in enumerate(reader):
-
                 temp_row = list(row)
                 expected_len = len(all_columns)
 
