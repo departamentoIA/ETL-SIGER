@@ -1,7 +1,6 @@
 
 
-from pkg.extract import *
-from pkg.transform import *
+from pkg.extraction import *
 
 
 def main():
@@ -16,12 +15,14 @@ def main():
 
         try:
             # 1. Extracción (E)
-            df = extract_from_file(table_name, ROOT_DATA_PATH, ANOMALIES_DIR)
+            df = extract_from_file(table_name, ROOT_DATA_PATH)
+            df_sample = df.sample(500)
+            df_sample.write_excel(f'{table_name}_sample.xlsx')
             # 2. Transformación (T)
-            print(f"--- INICIANDO TRANSFORMACIÓN para {table_name} ---")
-            df = apply_transformation(table_name, df)
-            df_sample = df.sample(50)
-            df_sample.write_excel(f'{table_name}_trans.xlsx')
+            # print(f"--- INICIANDO TRANSFORMACIÓN para {table_name} ---")
+            # df = apply_transformation(table_name, df)
+            # df_sample = df.sample(50)
+            # df_sample.write_excel(f'{table_name}_trans.xlsx')
             # print("--- TRANSFORMACIÓN FINALIZADA ---")
 
             # 3. Carga (L) - L1 (Parquet) y L2 (SQL Server)
