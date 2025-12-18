@@ -1,28 +1,23 @@
 
 
-from pkg.extraction import *
+from pkg.extract import *
+from pkg.transform import *
 
 
 def main():
-    """Ejecuta el pipeline E-T-L-EDA para todas las tablas."""
-    print("--- INICIANDO PIPELINE ETL Y QA ---")
-
+    """E-T-L pipeline."""
+    print("--- INICIANDO PIPELINE ETL ---")
     for table_name in TABLES_TO_PROCESS:
-
         print("\n" + "=" * 25)
         print(f"| 📊 Procesando Tabla: {table_name}")
         print("=" * 25)
-
         try:
             # 1. Extracción (E)
             df = extract_from_file(table_name, ROOT_DATA_PATH)
-            df_sample = df.sample(500)
-            df_sample.write_excel(f'{table_name}_sample.xlsx')
             # 2. Transformación (T)
-            # print(f"--- INICIANDO TRANSFORMACIÓN para {table_name} ---")
-            # df = apply_transformation(table_name, df)
-            # df_sample = df.sample(50)
-            # df_sample.write_excel(f'{table_name}_trans.xlsx')
+            df_trans = transform(df)
+            df_sample = df_trans.sample(100, seed=42)
+            df_sample.write_excel(f'{table_name}_trans.xlsx')
             # print("--- TRANSFORMACIÓN FINALIZADA ---")
 
             # 3. Carga (L) - L1 (Parquet) y L2 (SQL Server)
