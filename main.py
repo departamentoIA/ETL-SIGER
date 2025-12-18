@@ -11,13 +11,15 @@ def main():
         print(f"| 📊 Procesando Tabla: {table_name}")
         print("=" * 25)
         try:
-            # 1. Extracción (E)
+            # 1. Extraction (E)
             df = extract_from_file(table_name, ROOT_DATA_PATH)
-            # 2. Transformación (T)
+            # 2. Transformation (T)
             df_trans = transform(df)
             df_sample = df_trans.sample(100, seed=42)
-            df_sample.write_excel(f'{table_name}_trans.xlsx')
-            # print("--- TRANSFORMACIÓN FINALIZADA ---")
+            try:
+                df_sample.write_excel(f'{table_name}_trans.xlsx')
+            except:
+                print("\n\nNo puedo escribir en el excel si está abierto!")
 
             # 3. Carga (L) - L1 (Parquet) y L2 (SQL Server)
             # apply_loading(table_name, df)
