@@ -34,6 +34,4 @@ def extract_from_file(table_name: str, root_path: Path) -> pl.DataFrame:
         ignore_errors=True,         # útil si hay filas dañadas
         low_memory=True,            # reduce uso de RAM
     )
-    # print(df.schema)
-    print(f"DataFrame con {df.shape[0]} filas y {df.shape[1]} columnas")
     return df

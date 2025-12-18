@@ -6,7 +6,6 @@ from pkg.transform import *
 
 def main():
     """E-T-L pipeline."""
-    print("--- INICIANDO PIPELINE ETL ---")
     for table_name in TABLES_TO_PROCESS:
         print("\n" + "=" * 25)
         print(f"| 📊 Procesando Tabla: {table_name}")

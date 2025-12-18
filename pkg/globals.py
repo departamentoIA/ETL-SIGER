@@ -23,7 +23,7 @@ quote_char_double_quotes = ['MVCARATULAS', 'MVFRMACTO',
                             'MVSOLICITUDES', 'CTUSUARIOS_202511281728']
 
 # Columns to be dropped
-col_drop = []
+col_drop = ['CRFME', 'DSANTREG', 'DSMUNICIPIO', 'DSESTADO', 'DSNACIONALIDAD']
 
 # Columns 'Int32' type for all tables
 col_int32 = ['LLCARATULA', 'LLOFICINA', 'LLMUNICIPIO',
@@ -36,3 +36,8 @@ col_int8 = ['BOMORAL', 'BOACERVO']
 
 # Columns 'DATE' type for all tables
 col_date = ['FCAPERTURA']
+
+# String Columns to be converted to uppercase
+col_uppercase = ['DSDENSOCIAL', 'DSDIRECCION', 'DSDURACION',
+                 'DSGIRO', 'DSTIPOSOCIEDAD', 'DSOBJETO',
+                 'DSNACIONALIDAD']
