@@ -14,12 +14,13 @@ ETL-Polars/
     └── transform.py    # Contains all functions related to transform process
     └── globals.py      # Contains all global variables
     └── config.py       # Contains all configuration params
+    └── .env            # Contains all secret data (not provided)
 ```
 
 
 ## ✨ Details
 
-**main.py:** This script calls 'extract.py' to obtain the DataFrames corresponding to the tables, then 'transform.py' script is called to clean data and to convert the columns into the correct format.
+**main.py:** This script calls 'extract.py' to obtain the DataFrames corresponding to the tables, then 'transform.py' script is called to clean data, to convert the columns into the correct format and to load to SQL Server.
 
 ## 🚀 How to run locally
 1. Clone this repository:
@@ -38,4 +39,11 @@ For Linux:
 ```
 python -m venv env && source env/bin/activate && pip install -r requirements.txt
 ```
-3. Run "main.py".
+3. Create your ".env" file, which has the following form:
+```
+DB_SERVER=10.0.00.00,5000
+DB_NAME=SAT
+DB_USER=caarteaga
+DB_PASSWORD=pa$$word
+```
+4. Run "main.py".
