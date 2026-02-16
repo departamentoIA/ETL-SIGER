@@ -12,6 +12,7 @@ ETL-Polars/
     └── __init__.py     # Specifies that folder 'pkg' is a Python package
     └── extract.py      # Contains all functions related to extraction process
     └── transform.py    # Contains all functions related to transform process
+    └── load.py         # Contains all functions related to load process
     └── globals.py      # Contains all global variables
     └── config.py       # Contains all configuration params
     └── .env            # Contains all secret data (not provided)
@@ -20,7 +21,7 @@ ETL-Polars/
 
 ## ✨ Details
 
-**main.py:** This script calls 'extract.py' to obtain the DataFrames corresponding to the tables, then 'transform.py' script is called to clean data, to convert the columns into the correct format and to load to SQL Server.
+**main.py:** This script calls 'extract.py' to obtain the DataFrames corresponding to the tables, then 'transform.py' script is called to clean data, to convert the columns into the correct format and to load to SQL Server. Finally, 'load.py' is called to load every table to SQL Server.
 
 ## 🚀 How to run locally
 1. Clone this repository:

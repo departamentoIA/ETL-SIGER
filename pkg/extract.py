@@ -29,7 +29,7 @@ def extract_from_file(table_name: str, root_path: Path) -> pl.DataFrame:
         separator=delimiter,
         quote_char=quote_char,
         has_header=True,
-        encoding="utf8-lossy",      # Avoid errors caused by unusual characters
+        encoding="latin1",      # Avoid errors caused by unusual characters
         dtypes=None,
         ignore_errors=True,         # Useful if there are damaged rows
         low_memory=True,            # Reduce RAM usage

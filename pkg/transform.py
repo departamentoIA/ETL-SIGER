@@ -73,7 +73,7 @@ def load_table(df: pl.DataFrame, table_name: str) -> None:
         df.write_database(
             table_name=table_name,
             connection=engine,
-            if_table_exists="fail"  # If the tabla already exists, it fails
+            if_table_exists="replace"  # If the tabla already exists, it fails
         )
         print(f"✓ Datos subidos exitosamente a {table_name}")
 
