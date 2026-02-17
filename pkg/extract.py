@@ -21,15 +21,15 @@ def extract_from_file(table_name: str, root_path: Path) -> pl.DataFrame:
         raise FileNotFoundError(
             f"No se encontró el archivo para '{table_name}'.")
 
-    delimiter = '|'
     quote_char = '"' if table_name in quote_char_double_quotes else None
+    encoding = "utf8-lossy" if table_name in TABLES_UTF8 else 'latin1'
 
     df = pl.read_csv(
         file_path,
-        separator=delimiter,
+        separator='|',
         quote_char=quote_char,
         has_header=True,
-        encoding="latin1",      # Avoid errors caused by unusual characters
+        encoding=encoding,
         dtypes=None,
         ignore_errors=True,         # Useful if there are damaged rows
         low_memory=True,            # Reduce RAM usage

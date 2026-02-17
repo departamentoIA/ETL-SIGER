@@ -19,14 +19,14 @@ def main():
     """E-T-L process."""
     for table_name in TABLES_TO_PROCESS:
         print("\n" + "=" * 25)
-        print(f"| 📊 Procesando Tabla: {table_name}")
+        print(f"📊 Procesando tabla: {table_name}")
         print("=" * 25)
         try:
             # 1. Extraction (E)
             df = extract_from_file(table_name, ROOT_PATH)
-            df_sample_raw = df.sample(100, seed=42)
-            df_sample_raw.write_excel(f'{table_name}_sample_raw.xlsx')
-            """
+            # df_sample_raw = df.sample(100, seed=42)
+            # df_sample_raw.write_excel(f'{table_name}_sample_raw.xlsx')
+            # """
             # 2. Transformation (T)
             df_trans = transform(df)
             df_sample = df_trans.sample(100, seed=42)
