@@ -25,7 +25,8 @@ def map_polars_to_sql(colname: str, dtype: pl.DataType):
     return mapping.get(dtype, "NVARCHAR(255)")
 
 
-def create_table_from_df(engine, table_name: str, df: pl.DataFrame) -> None:
+def create_table_from_df(engine, table_name: str, df: pl.DataFrame,
+                         primary_key: str | None = None) -> None:
     """Create table in SQL Server by using both SQL commands and DataFrame scheme."""
     full_name_for_object_id = f"dbo.{table_name}"
     full_name_bracket = f"[dbo].[{table_name}]"
@@ -35,12 +36,17 @@ def create_table_from_df(engine, table_name: str, df: pl.DataFrame) -> None:
         sql_type = map_polars_to_sql(col, dtype)
         columns_sql.append(f"[{col}] {sql_type}")
 
+    pk_sql = ""
+    if primary_key:
+        pk_sql = f", CONSTRAINT PK_{table_name} PRIMARY KEY ({primary_key})"
+
     create_sql = f"""
     IF OBJECT_ID(N'{full_name_for_object_id}', 'U') IS NOT NULL
         DROP TABLE {full_name_bracket};
 
     CREATE TABLE {full_name_bracket} (
         {', '.join(columns_sql)}
+        {pk_sql}
     );
     """
 
@@ -60,11 +66,12 @@ def load_table(df: pl.DataFrame, table_name: str,
         pool_recycle=1800,
     )
     full_name_bracket = f"dbo.{table_name}"
-    create_table_from_df(engine, table_name, df)
+    create_table_from_df(engine, table_name, df, primary_keys.get(table_name))
     print(
         f"Subiendo tabla '{table_name}' a SQL Server en lotes de {batch_rows:,} filas...")
     # Batch insertion (pure Polars)
     n = df.height
+    step = 0
     try:
         for start in range(0, n, batch_rows):
             chunk = df.slice(start, batch_rows)
@@ -74,10 +81,11 @@ def load_table(df: pl.DataFrame, table_name: str,
                 connection=engine,
                 if_table_exists="append",
             )
-
-            if (start + batch_rows) % 50 == 0:
+            step += 1
+            if step == 5:
                 print(
                     f"✅ Filas completadas: {min(start + batch_rows, n):,} / {n:,}")
+                step = 0
 
     except Exception as e:
         print(f"❌ Error cargando '{table_name}': {e}")
