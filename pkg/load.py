@@ -55,17 +55,10 @@ def create_table_from_df(engine, table_name: str, df: pl.DataFrame,
         conn.execute(text(create_sql))
 
 
-def load_table(df: pl.DataFrame, table_name: str,
+def load_table(engine: sqlalchemy.engine.base.Engine, df: pl.DataFrame, table_name: str,
                batch_rows: int = 100_000    # It should be lower than 200k
-               ) -> sqlalchemy.engine.base.Engine:
+               ) -> None:
     """Load the DataFrame to SQL Server by using SQLAlchemy."""
-    # 'fast_executemany=True' is the secret to speed in SQL Server
-    engine = create_engine(
-        get_connection_string(),
-        fast_executemany=True,
-        pool_pre_ping=True,
-        pool_recycle=1800,
-    )
     full_name_bracket = f"dbo.{table_name}"
     create_table_from_df(engine, table_name, df, primary_keys.get(table_name))
     print(
@@ -91,8 +84,6 @@ def load_table(df: pl.DataFrame, table_name: str,
     except Exception as e:
         print(f"❌ Error cargando '{table_name}': {e}")
         raise
-
-    return engine
 
 
 def create_index(engine: sqlalchemy.engine.base.Engine, table_name: str,

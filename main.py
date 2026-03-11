@@ -15,6 +15,14 @@ from pkg.extract import *
 from pkg.transform import *
 from pkg.load import *
 
+engine = create_engine(
+    # 'fast_executemany=True' is the secret to speed in SQL Server
+    get_connection_string(),
+    fast_executemany=True,
+    pool_pre_ping=True,
+    pool_recycle=1800,
+)
+
 
 def write_df_sample(df: pl.DataFrame, table_name: str, text: str, n_rows: int) -> None:
     """Write an Excel file of n sample rows of the full DataFrame."""
@@ -41,10 +49,10 @@ def main():
             # write_df_sample(df_trans, table_name, "clean", 10)
 
             # 3. Load to SQL Server (L) and create primary key
-            engine_connection = load_table(df_trans, table_name)
+            load_table(engine, df_trans, table_name)
 
             # 4. Create table index
-            create_index(engine_connection, table_name, table_indexes)
+            create_index(engine, table_name, table_indexes)
 
         except Exception as e:
             print(
