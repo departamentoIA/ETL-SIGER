@@ -11,6 +11,12 @@ def map_polars_to_sql(colname: str, dtype: pl.DataType):
     if dtype == pl.Utf8 and colname in LONG_TEXT_COLS:
         return "NVARCHAR(MAX)"
 
+    if dtype == pl.Date:
+        return "DATE"
+
+    if getattr(dtype, "base_type", lambda: None)() == pl.Datetime:
+        return "DATETIME2"
+
     mapping = {
         pl.Int8: "TINYINT",
         pl.Int16: "SMALLINT",
@@ -20,8 +26,6 @@ def map_polars_to_sql(colname: str, dtype: pl.DataType):
         pl.Float32: "REAL",
         pl.Float64: "FLOAT",
         pl.Utf8: "NVARCHAR(255)",
-        pl.Date: "DATE",
-        pl.Datetime: "DATETIME2"
     }
     return mapping.get(dtype, "NVARCHAR(255)")
 

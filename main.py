@@ -52,7 +52,7 @@ def main():
             load_table(engine, df_trans, table_name)
 
             # 4. Create table index
-            create_index(engine, table_name, table_indexes)
+            # create_index(engine, table_name, table_indexes)
 
         except Exception as e:
             print(

@@ -40,7 +40,7 @@ def parse_datetime_columns(df: pl.DataFrame, columns: Iterable[str],
     return df.with_columns(
         [
             pl.col(col)
-              .str.strptime(pl.Datetime, format=fmt, strict=strict)
+              .str.strptime(pl.Datetime, strict=False).dt.date()
               .alias(col)
             for col in columns
             if col in df.columns and df.schema[col] == pl.Utf8
@@ -66,8 +66,9 @@ def transform(df: pl.DataFrame, table_name: str) -> pl.DataFrame:
     df = drop_columns(df, col_drop)
     df = cast_columns(df, col_int32, pl.Int32)
     df = cast_columns(df, col_Boolean, pl.Boolean)
-    df = parse_datetime_columns(df, col_date)
     df = to_cleaned_str(df, col_str)
+    df = parse_datetime_columns(df, col_date)
+
     print(f"DataFrame con {df.shape[0]} filas y {df.shape[1]} columnas")
     print(df.schema)
     return df
