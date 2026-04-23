@@ -18,29 +18,27 @@ ETL-SIGER/
     └── globals.py      # Contains all global variables
     └── config.py       # Contains all configuration params
     └── .env            # Contains all secret data (not provided)
+└── Documentation
 ```
 
-
 ## ✨ Details
-Consider the following:
-
 *In 'extract.py', the file is read all at the same time. If the file is too long, the file should be read by batches (chunks), as shown in:
 https://github.com/departamentoIA/ETL-SAT-NOMINAS/tree/main
 
 *In 'load.py', before loading the table, the corresponding SQL table in 'SQL Server' is created (by using SQL commands) according to the type of every column, as shown in Fig. 1 and Fig. 2. Primary keys are also created.
 
-![alt text](<Captura de pantalla 2026-04-23 134002.png>)
+![alt text](<Documentation/Captura de pantalla 2026-04-23 134002.png>)
 Fig. 1.
 
-![alt text](<Captura de pantalla 2026-04-23 133918.png>)
+![alt text](<Documentation/Captura de pantalla 2026-04-23 133918.png>)
 Fig. 2.
 
 All tables are loaded by batches, as shown in Fig. 3. Finally, table indexes are created.
-![alt text](<Captura de pantalla 2026-04-23 134925.png>)
+![alt text](<Documentation/Captura de pantalla 2026-04-23 134925.png>)
 Fig. 3.
 
 *In 'main.py', all tables are processed one by one, as shown in Fig. 4. Notice that this project is modular, this is, every module can be changed and the rest of code is not affected.
-![alt text](image.png)
+![alt text](Documentation/image.png)
 Fig. 4.
 
 ## 🚀 How to run locally
