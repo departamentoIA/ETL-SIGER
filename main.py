@@ -25,7 +25,8 @@ engine = create_engine(
 
 
 def write_df_sample(df: pl.DataFrame, table_name: str, text: str, n_rows: int) -> None:
-    """Write an Excel file of n sample rows of the full DataFrame."""
+    """Write an Excel file of n sample rows of the full DataFrame.
+    For Data Exploratory porpuses."""
     df_sample = df.sample(n_rows, seed=42)
     try:
         df_sample.write_excel(f'{table_name}_{text}.xlsx')

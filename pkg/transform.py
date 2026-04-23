@@ -68,7 +68,6 @@ def transform(df: pl.DataFrame, table_name: str) -> pl.DataFrame:
     df = cast_columns(df, col_Boolean, pl.Boolean)
     df = to_cleaned_str(df, col_str)
     df = parse_datetime_columns(df, col_date)
-
     print(f"DataFrame con {df.shape[0]} filas y {df.shape[1]} columnas")
     print(df.schema)
     return df
